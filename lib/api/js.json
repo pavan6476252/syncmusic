@@ -1,0 +1,23 @@
+[
+    {
+        "youtubeId": "Sjtd4qzCQBc",
+        "title": "Dimaak Kharaab (feat. Ram Pothineni, Nidhhi Agerwal & Nabha Natesh)",
+        "artists": [
+            {
+                "name": "Saketh",
+                "id": "UCxD-rU3rOqoukrtdgOVn-Fg"
+            },
+            {
+                "name": "Keerthana Sharma",
+                "id": "UCQJ-kXOTkozehnbq_-PXR0A"
+            }
+        ],
+        "album": "Dimaak Kharaab (From \"Ismart Shankar\")",
+        "thumbnailUrl": "https://lh3.googleusercontent.com/PSaTUkjmo9pj__FEvyFAokjaNbckETDFMMAqG5lFHJWsWGJuirXMatS-mysu5iYhaU-U3-nqV6ykLvGe=w120-h120-l90-rj",
+        "duration": {
+            "label": "4:40",
+            "totalSeconds": 280
+        },
+        "isExplicit": false
+    }
+]
