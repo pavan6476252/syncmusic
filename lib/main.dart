@@ -7,6 +7,7 @@ import 'package:syncmusic/provider/search_bar_provider.dart';
 import 'package:syncmusic/routes/go_route_config.dart';
 
 import 'provider/youtube_search_res_provider.dart';
+import 'service/audio_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,7 @@ void main() async {
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
   await Hive.openBox('syncmusic');
+  // await initAudioService();
 
   runApp(const MyApp());
 }
