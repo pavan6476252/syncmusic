@@ -12,17 +12,17 @@ class BrowseSongsTab extends StatefulWidget {
   State<BrowseSongsTab> createState() => _BrowseSongsTabState();
 }
 
-class _BrowseSongsTabState extends State<BrowseSongsTab> {
+class _BrowseSongsTabState extends State<BrowseSongsTab> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
 
     Future.delayed(Duration.zero, () {
-      if (Provider.of<BrowserHomeProvider>(context, listen: false).getApiData ==
-          null) {
+      // if (Provider.of<BrowserHomeProvider>(context, listen: false).getApiData ==
+      //     null) {
         Provider.of<BrowserHomeProvider>(context, listen: false)
             .fetchSaavanHomeData();
-      }
+      // }
     });
   }
 
@@ -307,4 +307,7 @@ class _BrowseSongsTabState extends State<BrowseSongsTab> {
       ),
     );
   }
+  
+  @override
+  bool get wantKeepAlive =>true;
 }

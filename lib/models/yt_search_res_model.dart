@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class YTMusicItemList {
   final List<YTMusicItem>? list;
   const YTMusicItemList({this.list});
@@ -6,6 +7,14 @@ class YTMusicItemList {
         list: list
             .map((item) => YTMusicItem.fromJson(item as Map<String, dynamic>))
             .toList());
+  }
+
+  YTMusicItemList copyWith({
+    List<YTMusicItem>? list,
+  }) {
+    return YTMusicItemList(
+      list: list ?? this.list,
+    );
   }
 }
 

@@ -33,13 +33,6 @@ class SearchBarProvider extends ChangeNotifier {
         _newSearches = SearchResults(searchItems: []);
         print(response.statusCode);
       }
-      // _newSearches = SearchResults(searchItems: [
-      //   SearchItem(title: "title"),
-      //   SearchItem(title: "title ds dfsd fdsfsdfffewrw f"),
-      //   SearchItem(title: "title dfdd sdf sf sdsd fsdf df "),
-      //   SearchItem(title: "titlesd dfef df dfd "),
-      //   SearchItem(title: "title asasd sa"),
-      // ]);
     } catch (e) {
       print("erro while getting search suggestions");
     } finally {
@@ -53,13 +46,10 @@ class SearchBarProvider extends ChangeNotifier {
       final box = Hive.box('syncmusic');
       final jsonString = await box.get('searches');
       if (jsonString != null) {
-
         _oldSearches = SearchResults.fromJson(jsonDecode(jsonString));
-
       }
     } catch (e) {
       print(e);
-       
     } finally {
       notifyListeners();
     }
@@ -71,15 +61,22 @@ class SearchBarProvider extends ChangeNotifier {
     try {
       final box = Hive.box('syncmusic');
       SearchResults searchResults = getOldSearches;
+      bool dublicate = false;
+      for (var element in searchResults.searchItems) {
+        if (element.title == term) {
+          dublicate = true;
+        }
+      }
+      if (!dublicate) {
+        SearchResults newSearchResults =
+            searchResults.addSearchItem(searchItem: SearchItem(title: term));
 
-      SearchResults newSearchResults =
-          searchResults.addSearchItem(searchItem: SearchItem(title: term));
+        box.put('searches', jsonEncode(newSearchResults.toJson()));
 
-      box.put('searches', jsonEncode(newSearchResults.toJson()));
+        _oldSearches = newSearchResults;
 
-      _oldSearches = newSearchResults;
-
-      notifyListeners();
+        notifyListeners();
+      }
     } catch (e) {
       print("Error while storing a new item");
     }
