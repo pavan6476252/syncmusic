@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart'; 
+import 'package:http/http.dart';
 import 'dart:convert';
 
-import '../api/saavanApi.dart';
+import '../api/savvan/saavanApi.dart';
 import '../models/saavan_home_api_model.dart';
 import '../utils/api_error_handling.dart';
 
@@ -19,11 +19,9 @@ class BrowserHomeProvider with ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      Response response =
-          await SaavanApi.getSaavanHomePageContent(lang: ['telugu']);
+      Response response = await SaavanApi.homePage(lang: ['telugu']);
 
       if (response.statusCode == 200) {
-        
         _apiErrorHandling = ApiErrorHandling(
             data:
                 SaavanHomeApiResponse.fromJson(await jsonDecode(response.body)),
@@ -34,7 +32,7 @@ class BrowserHomeProvider with ChangeNotifier {
             data: null, error: true, errorMsg: response.statusCode.toString());
       }
     } catch (e) {
-      print(e.toString());
+      print("[Error] $e");
       _apiErrorHandling =
           ApiErrorHandling(data: null, error: true, errorMsg: e.toString());
     } finally {

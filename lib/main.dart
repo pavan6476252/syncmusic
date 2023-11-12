@@ -3,10 +3,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:syncmusic/provider/browse_home_provider.dart';
+import 'package:syncmusic/provider/saavan_providers/saav_song_search_provider.dart';
 import 'package:syncmusic/provider/search_bar_provider.dart';
-import 'package:syncmusic/routes/go_route_config.dart';
+import 'package:syncmusic/utils/router.dart';
 
-import 'provider/youtube_search_res_provider.dart';
+import 'provider/yt_providers/yt_song_search_res_provider.dart';
 import 'service/audio_services.dart';
 
 void main() async {
@@ -34,7 +35,13 @@ class MyApp extends StatelessWidget {
             create: (context) => SearchBarProvider(),
           ),
           ChangeNotifierProvider(
-            create: (context) => YTSearchResultsProvider(),
+            create: (context) => YTSongSearchResultsProvider(),
+          ),
+
+          //saavan providers
+
+          ChangeNotifierProvider(
+            create: (context) => SaavanSongSearchProvider(),
           )
         ],
         child: MaterialApp.router(

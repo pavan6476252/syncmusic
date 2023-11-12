@@ -3,25 +3,25 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:syncmusic/provider/saavan_providers/saav_song_search_provider.dart';
+import 'package:syncmusic/provider/yt_providers/yt_song_search_res_provider.dart';
+import 'package:syncmusic/utils/utils.dart';
 
-import '../../../provider/youtube_search_res_provider.dart';
-import '../../../utils/utils.dart';
-
-class SaavanSearchResultsTab extends StatefulWidget {
-  const SaavanSearchResultsTab({super.key, required this.query});
+class SaavanSongSearchTab extends StatefulWidget {
+  const SaavanSongSearchTab({super.key, required this.query});
   final String query;
 
   @override
-  State<SaavanSearchResultsTab> createState() => _SaavanSearchResultsTabState();
+  State<SaavanSongSearchTab> createState() => _SaavanSongSearchTabState();
 }
 
-class _SaavanSearchResultsTabState extends State<SaavanSearchResultsTab>
+class _SaavanSongSearchTabState extends State<SaavanSongSearchTab>
     with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      Provider.of<YTSearchResultsProvider>(context, listen: false)
-          .searchYoutube(query: widget.query);
+      Provider.of<SaavanSongSearchProvider>(context, listen: false)
+          .searchSongs(query: widget.query);
     });
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -35,9 +35,11 @@ class _SaavanSearchResultsTabState extends State<SaavanSearchResultsTab>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     TextTheme textTheme = Theme.of(context).textTheme;
 
-    return Consumer<YTSearchResultsProvider>(builder: (context, value, child) {
+    return Scaffold(body:
+        Consumer<SaavanSongSearchProvider>(builder: (context, value, child) {
       if (value.isLoading) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -45,7 +47,7 @@ class _SaavanSearchResultsTabState extends State<SaavanSearchResultsTab>
       }
       if (value.getApiData.error) {
         return Center(
-          child: Text("Error: ${value.getApiData!.errorMsg}"),
+          child: Text("Error: ${value.getApiData.errorMsg}"),
         );
       }
 
@@ -53,58 +55,69 @@ class _SaavanSearchResultsTabState extends State<SaavanSearchResultsTab>
       if (value.getFetchError && value.isFetchingMore) {
         Future.delayed(Duration.zero, () {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Error while fetching more"),
+            content: const Text("Error while fetching more"),
             backgroundColor: Theme.of(context).colorScheme.error,
           ));
         });
       }
-
+      //     return Text('hello');
+      //   }));
+      // }
       return ListView.builder(
         controller: scrollController,
         padding: const EdgeInsets.only(top: 5),
         itemBuilder: (context, index) {
-          if (index == value.getApiData!.data!.list!.length) {
-            return Center(child: CircularProgressIndicator());
+          if (index == value.getApiData.data!.data.length) {
+            return const Center(child: CircularProgressIndicator());
           }
-          final result = value.getApiData!.data!.list![index];
+          final result = value.getApiData.data!.data[index];
           return ListTile(
             leading: CachedNetworkImage(
-                width: 60, height: 60, imageUrl: result.thumbnailUrl ?? ""),
+                width: 60, height: 60, imageUrl: result.image[ result.image.length-1].link),
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Text(
-                    result.title ?? "",
+                    result.name ?? "",
                     style: textTheme.bodyMedium,
                     maxLines: 1,
                   ),
                 ),
                 Text(
-                    '${formatSecondsToMinutesAndSeconds(result.duration!.totalSeconds?.toInt() ?? 0)}')
+                    formatSecondsToMinutesAndSeconds(
+                     int.parse( result.duration)))
+                 
               ],
             ),
             subtitle: Text(
-              ' ${result.artists!.map((e) => e.name).join(' , ')} ',
+              ' ${result.featuredArtists} ',
               maxLines: 1,
               style: textTheme.labelMedium!.copyWith(
                 overflow: TextOverflow.clip,
               ),
             ),
+            // subtitle: Text(
+            //   ' ${result.featuredArtists!.map((e) => e.name).join(' , ')} ',
+            //   maxLines: 1,
+            //   style: textTheme.labelMedium!.copyWith(
+            //     overflow: TextOverflow.clip,
+            //   ),
+            // ),
           );
         },
-        itemCount: value.getApiData!.data!.list!.length + 1,
+        itemCount: value.getApiData.data!.data.length + 1,
       );
-    });
+    }));
   }
 
   @override
   bool get wantKeepAlive => true;
 
   void fetchmore() {
-    if (!Provider.of<YTSearchResultsProvider>(context, listen: false)
+    if (!Provider.of<SaavanSongSearchProvider>(context, listen: false)
         .isFetchingMore) {
-      Provider.of<YTSearchResultsProvider>(context, listen: false).fetchMore();
+      Provider.of<SaavanSongSearchProvider>(context, listen: false).fetchMore();
     }
   }
 }

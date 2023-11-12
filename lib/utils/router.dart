@@ -5,8 +5,14 @@ import 'package:syncmusic/screens/audio/audio_full_screen.dart';
 import 'package:syncmusic/screens/search/SearchResultsScreen.dart';
 import 'package:syncmusic/screens/search/SearchScreen.dart';
 
+import '../screens/search/tabs/saavan_tabs/saavan_song_search_tab.dart';
+
 class GoRouteConfig {
   static final GoRouter goRouter = GoRouter(initialLocation: '/', routes: [
+    // GoRoute(
+    //   path: '/',
+    //   builder: (context, state) =>  SaavanSongSearchTab(query: "Leo songs"),
+    // ),
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(),

@@ -3,13 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:syncmusic/api/saavanApi.dart';
 import 'package:syncmusic/api/youtube/youtubeApi.dart';
 import 'package:syncmusic/models/yt_search_res_model.dart';
 
-import '../utils/api_error_handling.dart';
+import '../../utils/api_error_handling.dart';
 
-class YTSearchResultsProvider extends ChangeNotifier {
+class YTSongSearchResultsProvider extends ChangeNotifier {
   ApiErrorHandling<YTMusicItemList> _apiErrorHandling =
       ApiErrorHandling(data: null, error: true, errorMsg: "not loadded yet");
   ApiErrorHandling<YTMusicItemList> get getApiData => _apiErrorHandling;
@@ -22,6 +21,9 @@ class YTSearchResultsProvider extends ChangeNotifier {
 
   bool _fetchError = false;
   bool get getFetchError => _fetchError;
+
+  String _previousQuery = "";
+
   Future<void> fetchMore() async {
     _isfetchingMore = true;
     notifyListeners();
@@ -52,6 +54,10 @@ class YTSearchResultsProvider extends ChangeNotifier {
   }
 
   Future<void> searchYoutube({required String query}) async {
+    
+    if (_previousQuery == query) return;
+    _previousQuery = query;
+
     try {
       _isLoading = true;
       notifyListeners();
